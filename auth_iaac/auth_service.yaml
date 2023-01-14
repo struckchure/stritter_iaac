@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-service-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: auth-service
+  template:
+    metadata:
+      labels:
+        app: auth-service
+    spec:
+      containers:
+      - name: auth-service
+        image: struckchure/stritter_auth_service:v0.0.0
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 1000
+        env:
+          - name: DB_NAME
+            valueFrom:
+              secretKeyRef:
+                name: auth-service-secret
+                key: DB_NAME
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: auth-service-secret
+                key: DB_USER
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: auth-service-secret
+                key: DB_PASSWORD
+          - name: DB_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: auth-service-config
+                key: DB_PORT
+          - name: SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: auth-service-secret
+                key: SECRET_KEY
+          - name: DB_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: auth-service-config
+                key: DB_HOST
+          - name: API_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: auth-service-config
+                key: API_PORT
+          - name: DEBUG
+            valueFrom:
+              configMapKeyRef:
+                name: auth-service-config
+                key: DEBUG
+          - name: JWT_ALG
+            valueFrom:
+              configMapKeyRef:
+                name: auth-service-config
+                key: JWT_ALG
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-service
+spec:
+  type: NodePort
+  selector:
+    app: auth-service
+  ports:
+    - protocol: TCP
+      port: 1000
+      targetPort: 1000
+      nodePort: 30100

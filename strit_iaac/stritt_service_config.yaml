@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: strit-service-config
+data:
+  DB_HOST: strit-db-service
+  DB_PORT: "5432"
+  API_PORT: "2000"
+  DEBUG: "1"
+  JWT_ALG: HS256
