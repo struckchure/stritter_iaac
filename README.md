@@ -5,3 +5,8 @@ This folder contains infrastructures required to run the stritter project and al
 # Architure Diagram
 
 ![](./doc/images/k8s-arch.png)
+
+Runs on;
+
+- Kubernetes
+- Docker
