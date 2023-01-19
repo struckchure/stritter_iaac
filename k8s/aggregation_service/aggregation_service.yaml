@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aggregation-service-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aggregation-service
+  template:
+    metadata:
+      labels:
+        app: aggregation-service
+    spec:
+      containers:
+      - name: aggregation-service
+        image: struckchure/stritter_aggregation_service:v0.0.0
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8000
+        env:
+          - name: API_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: aggregation-service-config
+                key: API_PORT
+          - name: DEBUG
+            valueFrom:
+              configMapKeyRef:
+                name: aggregation-service-config
+                key: DEBUG
+          - name: AUTH_SERVICE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: aggregation-service-config
+                key: AUTH_SERVICE_URL
+          - name: STRIT_SERVICE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: aggregation-service-config
+                key: STRIT_SERVICE_URL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aggregation-service
+spec:
+  selector:
+    app: aggregation-service
+  type: NodePort
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8000
+    nodePort: 30100

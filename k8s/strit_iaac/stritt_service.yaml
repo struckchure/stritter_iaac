@@ -11,9 +11,6 @@ spec:
     metadata:
       labels:
         app: strit-service
-      annotations:
-        consul.hashicorp.com/connect-inject: "true"
-        consul.hashicorp.com/connect-service-upstreams: "strit-service:2000"
     spec:
       containers:
       - name: strit-service

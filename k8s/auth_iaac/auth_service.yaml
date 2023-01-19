@@ -11,9 +11,6 @@ spec:
     metadata:
       labels:
         app: auth-service
-      annotations:
-        consul.hashicorp.com/connect-inject: "true"
-        consul.hashicorp.com/connect-service-upstreams: "auth-service:1000"
     spec:
       containers:
       - name: auth-service
